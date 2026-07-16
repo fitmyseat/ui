@@ -1,0 +1,30 @@
+<h2>Cloudinary Upload Demo</h2>
+
+<input
+    type="file"
+    (change)="onFileSelected($event)">
+
+<br><br>
+
+<button
+    (click)="upload()">
+
+    Upload Image
+
+</button>
+
+<hr>
+
+<div *ngIf="imageUrl">
+
+    <h3>Uploaded Successfully</h3>
+
+    <img
+        [src]="imageUrl"
+        width="300">
+
+    <br><br>
+
+    {{imageUrl}}
+
+</div>
