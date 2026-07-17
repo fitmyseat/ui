@@ -1,0 +1,29 @@
+<div class="home-container">
+  <div class="welcome-banner">
+    <h2>🏆 Premium Car Seat Covers</h2>
+    <p>Protect and style your seats with custom-fit covers</p>
+  </div>
+
+  <app-image-upload></app-image-upload>
+
+  <hr class="section-divider">
+  <h2 class="section-title">👥 Customer Accounts</h2>
+
+  <table border="1" cellpadding="8">
+
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Role</th>
+    </tr>
+
+    <tr *ngFor="let user of users">
+      <td>{{user.id}}</td>
+      <td>{{user.username}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.role}}</td>
+    </tr>
+
+  </table>
+</div>

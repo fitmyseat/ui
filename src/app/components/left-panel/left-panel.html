@@ -1,0 +1,28 @@
+<div class="left-panel-overlay" [class.open]="isOpen()" (click)="close()"></div>
+
+<aside class="left-panel" [class.open]="isOpen()">
+  <div class="panel-header">
+    <h3>🪑 SeatCovers</h3>
+    <button class="close-btn" (click)="close()" aria-label="Close menu">
+      ✕
+    </button>
+  </div>
+
+  <nav class="panel-nav">
+    <ul>
+      <li><a routerLink="" (click)="close()">🏠 Home</a></li>
+      <li><a routerLink="/all-covers" (click)="close()">🚗 All Covers</a></li>
+      <li><a routerLink="/account" \(click\)="close()">� Account</a></li>
+      <li><a routerLink="/admin" \(click\)="close()">⚙️ Admin</a></li>
+      <li><a routerLink="/reports" \(click\)="close()">� Reports</a></li>
+    </ul>
+  </nav>
+
+  <div class="panel-footer">
+    <p>FitMySeat v1.0</p>
+  </div>
+</aside>
+
+
+
+

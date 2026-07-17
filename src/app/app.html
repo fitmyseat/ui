@@ -1,24 +1,16 @@
-<h1>FitMySeat</h1>
+<div class="app-container">
+  <app-left-panel #leftPanel></app-left-panel>
 
-<app-image-upload></app-image-upload>
+  <div class="main-content">
+    <header class="app-header">
+      <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+        ☰
+      </button>
+      <h1>🪑 FitMySeat</h1>
+    </header>
 
-<hr>
-<h2>Users</h2>
-
-<table border="1" cellpadding="8">
-
-  <tr>
-    <th>ID</th>
-    <th>Username</th>
-    <th>Email</th>
-    <th>Role</th>
-  </tr>
-
-  <tr *ngFor="let user of users">
-    <td>{{user.id}}</td>
-    <td>{{user.username}}</td>
-    <td>{{user.email}}</td>
-    <td>{{user.role}}</td>
-  </tr>
-
-</table>
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

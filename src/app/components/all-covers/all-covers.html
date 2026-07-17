@@ -1,0 +1,122 @@
+<div class="all-covers-container">
+  <div class="page-header">
+    <h2>🚗 All Seat Covers</h2>
+    <p>Browse our complete collection of premium seat covers</p>
+  </div>
+
+  <div class="search-section">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        [value]="searchTerm()" 
+        (input)="onSearchChange($event)"
+        placeholder="Search by name, material, color, or vehicle type..."
+        class="search-input"
+      />
+    </div>
+    <div class="results-count">
+      <span *ngIf="filteredCovers().length === allCovers.length">
+        Showing all {{ filteredCovers().length }} covers
+      </span>
+      <span *ngIf="filteredCovers().length !== allCovers.length">
+        Found {{ filteredCovers().length }} of {{ allCovers.length }} covers
+      </span>
+    </div>
+    <button class="add-btn" (click)="openAddForm()">+ Add Product</button>
+  </div>
+
+  <!-- Product Form Modal -->
+  <div *ngIf="isEditing()" class="modal-overlay" (click)="cancelEdit()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>{{ editingProduct?.id ? 'Edit Product' : 'Add New Product' }}</h3>
+      <form [formGroup]="productForm" (ngSubmit)="editingProduct?.id ? updateProduct() : createProduct()" class="product-form">
+        <div class="form-group">
+          <label for="vehicle_name">Vehicle Name:</label>
+          <input id="vehicle_name" type="text" formControlName="vehicle_name" required>
+        </div>
+        <div class="form-group">
+          <label for="model">Model:</label>
+          <input id="model" type="text" formControlName="model">
+        </div>
+        <div class="form-group">
+          <label for="color">Color:</label>
+          <input id="color" type="text" formControlName="color">
+        </div>
+        <div class="form-group">
+          <label for="price">Price:</label>
+          <input id="price" type="number" formControlName="price" step="0.01">
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input id="quantity" type="number" formControlName="quantity" required>
+        </div>
+        <div class="form-group">
+          <label for="stitch">Stitch:</label>
+          <input id="stitch" type="text" formControlName="stitch">
+        </div>
+        <div class="form-group">
+          <label for="image_url">Image URL:</label>
+          <input id="image_url" type="text" formControlName="image_url" required>
+        </div>
+        <div class="form-group image-upload-group">
+          <label>Or Upload Image:</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*">
+          <button type="button" class="upload-image-btn" (click)="uploadImage()" [disabled]="uploadingImage()">
+            {{ uploadingImage() ? 'Uploading...' : 'Upload Image' }}
+          </button>
+        </div>
+        <div class="form-group">
+          <label for="cloudinary_public_id">Cloudinary Public ID:</label>
+          <input id="cloudinary_public_id" type="text" formControlName="cloudinary_public_id">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="productForm.invalid">{{ editingProduct?.id ? 'Update' : 'Create' }}</button>
+          <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="covers-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Vehicle Name</th>
+          <th>Model</th>
+          <th>Color</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cover of filteredCovers()">
+          <td>{{ cover.id }}</td>
+          <td class="name-cell">{{ cover.vehicle_name }}</td>
+          <td>{{ cover.model }}</td>
+          <td>{{ cover.color }}</td>
+          <td class="price-cell">${{ cover.price?.toFixed(2) || '0.00' }}</td>
+          <td>{{ cover.quantity }}</td>
+          <td>
+            <button class="action-btn edit-btn" (click)="editProduct(cover)">Edit</button>
+            <button class="action-btn delete-btn" (click)="deleteProduct(cover.id!)">Delete</button>
+            <button class="action-btn upload-btn" (click)="openAddForm(); productForm.patchValue({vehicle_name: cover.vehicle_name, model: cover.model, color: cover.color, price: cover.price, quantity: cover.quantity, stitch: cover.stitch, image_url: cover.image_url, cloudinary_public_id: cover.cloudinary_public_id})">Upload Image</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredCovers().length === 0">
+          <td colspan="7" class="no-results">
+            <div class="no-results-content">
+              <span class="no-results-icon">🔍</span>
+              <p>No covers found matching "{{ searchTerm() }}"</p>
+              <button class="clear-search-btn" (click)="searchTerm.set(''); filterCovers()">
+                Clear Search
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
