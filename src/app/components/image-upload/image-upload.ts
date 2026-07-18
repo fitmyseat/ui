@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageService } from '../../services/image.service';
 
@@ -15,7 +15,15 @@ export class ImageUploadComponent {
 
   imageUrl = '';
 
+  @ViewChild('cameraInput') cameraInput!: ElementRef<HTMLInputElement>;
+
   constructor(private imageService: ImageService) {}
+
+  triggerCamera() {
+    if (this.cameraInput) {
+      this.cameraInput.nativeElement.click();
+    }
+  }
 
   onFileSelected(event: Event) {
 

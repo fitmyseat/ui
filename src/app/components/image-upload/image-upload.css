@@ -1,0 +1,44 @@
+.upload-options {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.camera-btn,
+.file-upload-btn {
+  padding: 12px 24px;
+  background: #e53e3e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.camera-btn:hover,
+.file-upload-btn:hover {
+  background: #c53030;
+}
+
+.file-upload-btn {
+  background: #1a1a2e;
+}
+
+.file-upload-btn:hover {
+  background: #16213e;
+}
+
+button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+button:disabled:hover {
+  background: #cccccc;
+}

@@ -102,7 +102,6 @@
           <td>
             <button class="action-btn edit-btn" (click)="editProduct(cover)">Edit</button>
             <button class="action-btn delete-btn" (click)="deleteProduct(cover.id!)">Delete</button>
-            <button class="action-btn upload-btn" (click)="openAddForm(); productForm.patchValue({vehicle_name: cover.vehicle_name, model: cover.model, color: cover.color, price: cover.price, quantity: cover.quantity, stitch: cover.stitch, image_url: cover.image_url, cloudinary_public_id: cover.cloudinary_public_id})">Upload Image</button>
           </td>
         </tr>
         <tr *ngIf="filteredCovers().length === 0">

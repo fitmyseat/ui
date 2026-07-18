@@ -1,19 +1,42 @@
 <h2>Cloudinary Upload Demo</h2>
 
+<div class="upload-options">
+  <button class="camera-btn" (click)="triggerCamera()">
+    📷 Take Photo
+  </button>
+  <label class="file-upload-btn">
+    📁 Choose File
+    <input
+      type="file"
+      accept="image/*"
+      (change)="onFileSelected($event)"
+      style="display: none;">
+  </label>
+</div>
+
 <input
     type="file"
-    (change)="onFileSelected($event)">
+    accept="image/*"
+    capture="environment"
+    (change)="onFileSelected($event)"
+    #cameraInput
+    style="display: none;">
 
 <br><br>
 
 <button
-    (click)="upload()">
+    (click)="upload()"
+    [disabled]="!selectedFile">
 
     Upload Image
 
 </button>
 
 <hr>
+
+<div *ngIf="selectedFile">
+  <p>Selected: {{ selectedFile.name }}</p>
+</div>
 
 <div *ngIf="imageUrl">
 

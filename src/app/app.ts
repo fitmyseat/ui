@@ -1,7 +1,8 @@
 import { Component, signal, inject, viewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User, UserService } from './core/services/user';
+import { AuthService } from './core/services/auth';
 import { ImageUploadComponent } from './components/image-upload/image-upload';
 import { LeftPanel } from './components/left-panel/left-panel';
 
@@ -14,6 +15,8 @@ import { LeftPanel } from './components/left-panel/left-panel';
 })
 export class App {
   private userService = inject(UserService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
   leftPanel = viewChild(LeftPanel);
 
   protected readonly title = signal('seat-ui');
@@ -29,7 +32,24 @@ export class App {
     });
   }
 
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  get currentUser(): User | null {
+    return this.authService.getCurrentUser();
+  }
+
   toggleMenu() {
     this.leftPanel()?.toggle();
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

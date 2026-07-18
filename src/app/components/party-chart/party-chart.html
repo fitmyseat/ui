@@ -1,0 +1,33 @@
+<div class="chart-container">
+  <h3>👥 Party Name Analysis (Monthly)</h3>
+  <div *ngIf="sales().length === 0" class="no-data">
+    <p>No sales data available for analysis</p>
+  </div>
+  <div *ngIf="sales().length > 0" class="chart-content">
+    <div class="monthly-section">
+      <h4>Monthly Breakdown</h4>
+      <div *ngFor="let monthData of getMonthlyPartyAnalysis()" class="month-block">
+        <h5>{{ monthData.month }}</h5>
+        <div class="party-list">
+          <div *ngFor="let party of monthData.parties" class="party-item">
+            <span class="party-name">{{ party.name }}</span>
+            <span class="party-count">{{ party.count }} sales</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="overall-section">
+      <h4>Top Parties Overall</h4>
+      <div class="bar-chart">
+        <div *ngFor="let party of getTopPartiesOverall()" class="bar-item">
+          <div class="bar-label">{{ party.name }}</div>
+          <div class="bar-wrapper">
+            <div class="bar-fill" [style.width.%]="(party.count / getMaxCount()) * 100"></div>
+            <div class="bar-value">{{ party.count }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

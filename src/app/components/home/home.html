@@ -1,29 +1,88 @@
 <div class="home-container">
-  <div class="welcome-banner">
-    <h2>🏆 Premium Car Seat Covers</h2>
-    <p>Protect and style your seats with custom-fit covers</p>
+  <div class="filter-section">
+    <div class="search-filter">
+      <label>🔍 Search:</label>
+      <input type="text" [(ngModel)]="searchTerm" (input)="filterProducts()" placeholder="Search by vehicle name, model, color..." class="search-input">
+      <button class="clear-search-btn" (click)="clearSearch()" *ngIf="searchTerm">Clear</button>
+    </div>
+    <div class="action-buttons">
+      <button class="select-all-btn" (click)="selectAllProducts()">Select All</button>
+      <button class="deselect-all-btn" (click)="deselectAllProducts()">Deselect All</button>
+      <button class="share-btn" (click)="openShareModal()" [disabled]="selectedCount === 0">Share ({{ selectedCount }})</button>
+    </div>
   </div>
 
-  <app-image-upload></app-image-upload>
-
   <hr class="section-divider">
-  <h2 class="section-title">👥 Customer Accounts</h2>
+  <h2 class="section-title">� Our Products</h2>
 
-  <table border="1" cellpadding="8">
+  <div *ngIf="loading" class="loading-state">
+    <p>Loading products...</p>
+  </div>
 
-    <tr>
-      <th>ID</th>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Role</th>
-    </tr>
+  <div *ngIf="error" class="error-state">
+    <p>{{ error }}</p>
+  </div>
 
-    <tr *ngFor="let user of users">
-      <td>{{user.id}}</td>
-      <td>{{user.username}}</td>
-      <td>{{user.email}}</td>
-      <td>{{user.role}}</td>
-    </tr>
+  <div *ngIf="!loading && !error && filteredProducts.length === 0" class="no-products">
+    <p>No products found matching your search.</p>
+  </div>
 
-  </table>
+  <div class="products-grid" *ngIf="!loading && !error && filteredProducts.length > 0">
+    <div class="product-card" *ngFor="let product of filteredProducts" [class.selected]="isProductSelected(product.id!)">
+      <div class="product-checkbox">
+        <input type="checkbox" [id]="'product-' + product.id" [checked]="isProductSelected(product.id!)" (change)="toggleProductSelection(product.id!)">
+        <label [for]="'product-' + product.id"></label>
+      </div>
+      <div class="product-image">
+        <img [src]="product.image_url || 'https://via.placeholder.com/300x200?text=No+Image'" [alt]="product.vehicle_name">
+      </div>
+      <div class="product-info">
+        <h3>{{ product.vehicle_name }}</h3>
+        <p class="product-model">{{ product.model || 'Universal' }}</p>
+        <p class="product-color" *ngIf="product.color">Color: {{ product.color }}</p>
+        <p class="product-quantity">In Stock: {{ product.quantity }}</p>
+        <button class="sold-btn" (click)="confirmSale(product)">Sold</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div *ngIf="showConfirmModal" class="modal-overlay" (click)="cancelSale()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Confirm Sale</h3>
+      <p>Are you sure you want to mark this item as sold?</p>
+      <p class="product-details">
+        <strong>{{ selectedProduct?.vehicle_name }}</strong><br>
+        {{ selectedProduct?.model || 'Universal' }}
+      </p>
+      <div class="form-group">
+        <label for="partyName">Party Name:</label>
+        <input id="partyName" type="text" [(ngModel)]="partyName" placeholder="Enter party name" required>
+      </div>
+      <div class="form-group">
+        <label for="saleDate">Sale Date:</label>
+        <input id="saleDate" type="date" [(ngModel)]="saleDate" required>
+      </div>
+      <div class="modal-actions">
+        <button class="confirm-btn" (click)="processSale()" [disabled]="!partyName || !saleDate">Yes</button>
+        <button class="cancel-btn" (click)="cancelSale()">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div *ngIf="showShareModal" class="modal-overlay" (click)="closeShareModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Share via WhatsApp</h3>
+      <p>Share {{ selectedCount }} selected product(s) with a customer</p>
+      <div class="form-group">
+        <label for="mobileNumber">Mobile Number:</label>
+        <input id="mobileNumber" type="tel" [(ngModel)]="mobileNumber" placeholder="Enter mobile number (e.g., 9876543210)" required pattern="[0-9]{10}">
+      </div>
+      <div class="modal-actions">
+        <button class="confirm-btn" (click)="shareViaWhatsApp()" [disabled]="!mobileNumber">Share</button>
+        <button class="cancel-btn" (click)="closeShareModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>

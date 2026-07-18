@@ -11,9 +11,9 @@
   <nav class="panel-nav">
     <ul>
       <li><a routerLink="" (click)="close()">🏠 Home</a></li>
-      <li><a routerLink="/all-covers" (click)="close()">🚗 All Covers</a></li>
+      <li *ngIf="isLoggedIn"><a routerLink="/all-covers" (click)="close()">🚗 Stock</a></li>
       <li><a routerLink="/account" \(click\)="close()">� Account</a></li>
-      <li><a routerLink="/admin" \(click\)="close()">⚙️ Admin</a></li>
+      <li *ngIf="isLoggedIn"><a routerLink="/admin" (click)="close()">⚙️ Admin</a></li>
       <li><a routerLink="/reports" \(click\)="close()">� Reports</a></li>
     </ul>
   </nav>

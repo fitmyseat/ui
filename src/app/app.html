@@ -1,12 +1,19 @@
 <div class="app-container">
-  <app-left-panel #leftPanel></app-left-panel>
+  <app-left-panel #leftPanel *ngIf="isLoggedIn"></app-left-panel>
 
   <div class="main-content">
     <header class="app-header">
-      <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+      <button *ngIf="isLoggedIn" class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
         ☰
       </button>
-      <h1>🪑 FitMySeat</h1>
+      <h1>🪑 FitMySeat - Premium Car Seat Covers</h1>
+      <div class="auth-section">
+        <button *ngIf="!isLoggedIn" class="login-btn" (click)="navigateToLogin()">Login</button>
+        <div *ngIf="isLoggedIn" class="user-info">
+          <span class="username">{{ currentUser?.username }}</span>
+          <button class="logout-btn" (click)="logout()">Logout</button>
+        </div>
+      </div>
     </header>
 
     <div class="content-wrapper">

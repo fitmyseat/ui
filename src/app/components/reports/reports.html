@@ -1,6 +1,136 @@
 <div class="reports-container">
-  <div class="blank-page">
-    <h2>📊 Reports</h2>
-    <p>Reports page - Coming Soon</p>
+  <div class="page-header">
+    <h2>📊 Sales Reports</h2>
+    <p>View and manage all sales records</p>
+  </div>
+
+  <div class="filter-section">
+    <div class="date-filter">
+      <label>From:</label>
+      <input type="date" [(ngModel)]="startDate" class="date-input">
+      <label>To:</label>
+      <input type="date" [(ngModel)]="endDate" class="date-input">
+      <button class="filter-btn" (click)="filterByDateRange()">Filter</button>
+      <button class="clear-btn" (click)="clearFilter()">Clear</button>
+      <button class="add-btn" (click)="openAddForm()">+ Add Sale</button>
+    </div>
+  </div>
+
+  <div class="charts-section">
+    <app-vehicle-chart [sales]="filteredSales"></app-vehicle-chart>
+    <app-party-chart [sales]="filteredSales"></app-party-chart>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading sales...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="sales-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Sale Date</th>
+          <th>Party Name</th>
+          <th>Vehicle Name</th>
+          <th>Model</th>
+          <th>Color</th>
+          <th>Stitch</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Total Price</th>
+          <th>Payment Mode</th>
+          <th>Mobile Number</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sale of filteredSales">
+          <td>{{ sale.id }}</td>
+          <td>{{ sale.sale_date || 'N/A' }}</td>
+          <td>{{ sale.party_name }}</td>
+          <td>{{ sale.vehicle_name }}</td>
+          <td>{{ sale.model || 'N/A' }}</td>
+          <td>{{ sale.color || 'N/A' }}</td>
+          <td>{{ sale.stitch || 'N/A' }}</td>
+          <td>{{ sale.quantity }}</td>
+          <td>${{ sale.unit_price?.toFixed(2) || '0.00' }}</td>
+          <td>${{ sale.total_price?.toFixed(2) || '0.00' }}</td>
+          <td>{{ sale.payment_mode }}</td>
+          <td>{{ sale.mobile_number || 'N/A' }}</td>
+          <td>
+            <button class="action-btn delete-btn" (click)="deleteSale(sale.id!)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredSales.length === 0">
+          <td colspan="13" class="no-results">
+            <div class="no-results-content">
+              <span class="no-results-icon">📊</span>
+              <p>No sales found</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Sale Form Modal -->
+  <div *ngIf="showForm" class="modal-overlay" (click)="cancelForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>{{ editingSale?.id ? 'Edit Sale' : 'Add New Sale' }}</h3>
+      <form [formGroup]="saleForm" (ngSubmit)="saveSale()" class="sale-form">
+        <div class="form-group">
+          <label for="party_name">Party Name:</label>
+          <input id="party_name" type="text" formControlName="party_name" required>
+        </div>
+        <div class="form-group">
+          <label for="vehicle_name">Vehicle Name:</label>
+          <input id="vehicle_name" type="text" formControlName="vehicle_name" required>
+        </div>
+        <div class="form-group">
+          <label for="model">Model:</label>
+          <input id="model" type="text" formControlName="model">
+        </div>
+        <div class="form-group">
+          <label for="color">Color:</label>
+          <input id="color" type="text" formControlName="color">
+        </div>
+        <div class="form-group">
+          <label for="stitch">Stitch:</label>
+          <input id="stitch" type="text" formControlName="stitch">
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input id="quantity" type="number" formControlName="quantity" required (input)="calculateTotalPrice()">
+        </div>
+        <div class="form-group">
+          <label for="unit_price">Unit Price:</label>
+          <input id="unit_price" type="number" formControlName="unit_price" step="0.01" required (input)="calculateTotalPrice()">
+        </div>
+        <div class="form-group">
+          <label for="total_price">Total Price:</label>
+          <input id="total_price" type="number" formControlName="total_price" step="0.01" required readonly>
+        </div>
+        <div class="form-group">
+          <label for="payment_mode">Payment Mode:</label>
+          <input id="payment_mode" type="text" formControlName="payment_mode" required>
+        </div>
+        <div class="form-group">
+          <label for="mobile_number">Mobile Number:</label>
+          <input id="mobile_number" type="text" formControlName="mobile_number">
+        </div>
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input id="address" type="text" formControlName="address">
+        </div>
+        <div class="form-group">
+          <label for="remarks">Remarks:</label>
+          <input id="remarks" type="text" formControlName="remarks">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="saleForm.invalid">{{ editingSale?.id ? 'Update' : 'Create' }}</button>
+          <button type="button" class="cancel-btn" (click)="cancelForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
